@@ -1,3 +1,7 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
 from flask import Flask, request, render_template, jsonify
 from pymongo import MongoClient
 import requests
@@ -6,11 +10,14 @@ from bson import ObjectId
 
 app = Flask(__name__)
 
-cxn_str = f'mongodb+srv://zansa:sparta@cluster0.ewlmvij.mongodb.net/?retryWrites=true&w=majority'
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
-client = MongoClient(cxn_str)
-db = client.dbsparta_plus_week2
-collection = db.words
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
 
 @app.route('/')
 def main():
